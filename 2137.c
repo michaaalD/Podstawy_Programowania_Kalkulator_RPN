@@ -103,8 +103,8 @@ int main()
       {
         int a= pop(&stos);
         int b = pop(&stos);
-        float c = a+b;
-        printf("Wynik: %.2f",c);
+        float c = b+a;
+        printf("Wynik: %.2f\n",c);
         push(&stos,c);
         break;
         break;
@@ -113,8 +113,8 @@ int main()
       {
         int a= pop(&stos);
         int b = pop(&stos);
-        float c = a-b;
-        printf("Wynik: %.2f",c);
+        float c = b-a;
+        printf("Wynik: %.2f\n",c);
         push(&stos,c);
         break;
         }
@@ -122,8 +122,8 @@ int main()
       {
         int a= pop(&stos);
         int b = pop(&stos);
-        float c = (float)a/(float)b;
-        printf("Wynik: %.2f",c);
+        float c = (float)b/(float)a;
+        printf("Wynik: %.2f\n",c);
         push(&stos,c);
         break;
       }
@@ -131,8 +131,8 @@ int main()
       {
         int a= pop(&stos);
         int b = pop(&stos);
-        float c = (float)a*(float)b;
-        printf("Wynik: %f", c);
+        float c = (float)b*(float)a;
+        printf("Wynik: %.2f\n", c);
         push(&stos,c);
         break;
       }
@@ -157,8 +157,8 @@ int main()
           printf("Invalid\n");
           break;
         }
-      n=1;
-      oper=0;
+      n--;
+      oper=' ';
     }
   }
 
@@ -171,6 +171,3 @@ int main()
   
   return 0;
 }
-
-
-//oper = getc(stdin);
