@@ -171,3 +171,20 @@ int main()
   
   return 0;
 }
+
+/*
+Sprawozdanie
+
+Michałl Dos
+nr indeksu 263498
+data 18.12.2022r.
+
+Temat: "Kalkulator RPN"
+
+TESTY:
+
+
+WNIOSKI:
+
+
+*/
