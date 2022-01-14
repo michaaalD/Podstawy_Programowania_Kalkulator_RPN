@@ -1,85 +1,122 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- 
- 
-typedef struct  el_stosu{
-    int wartosc;
-    struct el_stosu* next;
-} el_stosu;
- 
-el_stosu new_el_stosu(int wartosc){
-    el_stosu el = {wartosc, NULL};
-    return el;
-}
- 
-void push(el_stosu **head, int wartosc){
-    el_stosu* new_element = (el_stosu*)malloc(sizeof(el_stosu));
- 
-    new_element->wartosc = wartosc;
-    new_element->next = *head;
- 
-    *head = new_element;
-}
- 
+#include <errno.h>
 
-int pop(el_stosu **head)
+typedef struct stack
 {
-    if(*head != NULL){
-        int wartosc;
-        el_stosu *old_head = *head;
- 
-        *head = (*head)->next;
-        wartosc = old_head->wartosc;
- 
-        free(old_head);
-        return wartosc;
-    }
-    else{
-        printf("Nie mozna zdjac elementu z pustego stosu\n");
-    }
-}
+	int data;
+	struct stack *next;
+} stack;
 
-int empty(el_stosu **head)
+void push( stack **head, int value )
 {
-    el_stosu *old_head = *head;
-    while(*head != NULL)
-    {
-        *head = (*head)->next;
-    }
+	stack* node = malloc( sizeof(stack) );
+
+	if( node == NULL ) {
+		fputs( "Error: Out of memory\n", stderr );
+		exit( 1 );
+	} else {
+		node->data = value;
+		node->next = *head;
+		*head = node;
+	}
 }
 
-int peep(el_stosu **head){
-    if(*head != NULL){
-        
-        int wartosc;
-        el_stosu *akt_head = *head;
- 
-        wartosc = akt_head->wartosc;
- 
-        
-        return wartosc;
-        
-    }
-    else{
-        printf("Stos pusty\n");
-    }
-}
- 
-int main()
+int pop( stack **head )
 {
-    el_stosu* stos = NULL;
+	if( *head == NULL ) {
+		fputs( "Error: bottom of stack!\n", stderr );
+		exit( 1 );
+	} else {
+		stack* top = *head;
+		int value = top->data;
+		*head = top->next;
+		free( top );
+		return value;
+	}
+}
 
-    push(&stos,1);
-    push(&stos,2);
-    push(&stos,3);
-    push(&stos,5);
-    pop(&stos);
-    push(&stos,4);
-    //empty(&stos);
-    //int a = pop(&stos);
-    //int b = pop(&stos);
+int eval( char op, stack** head )
+{
+	int temp;
+	switch( op ) {
+		case '+': return pop(head) + pop(head);
+		case '*': return pop(head) * pop(head);
+		case '-': temp = pop(head); return pop(head) - temp;
+		case '/': temp = pop(head); return pop(head) / temp;
+	}
+}
 
-    peep(&stos);
-    return 0;
+int need( char op )
+{
+	switch( op ) {
+		case '+':
+		case '*':
+		case '-':
+		case '/':
+			return 2;
+		default:
+			fputs( "Invalid operand!", stderr );
+			exit( 1 );
+	}
+}
+
+int checknr( char* number )
+{
+	for( ; *number; number++ )
+		if( *number < '0' || *number > '9' )
+			return 0;
+
+	return 1;
+}
+
+int main( int argc, char** argv )
+{
+	int i, temp, stacksize = 0;
+	stack* head = NULL;
+
+	if( argc == 1 )
+	{
+		printf("Usage: %s <arg> [arg] ... \n", argv[0]);
+		exit(1);
+	}
+
+	for( i = 1; i < argc; i++ ) {
+		char* token = argv[i];
+		char* endptr;
+		char op;
+
+		if( checknr( token ) ) {
+			/* We have a valid number. */
+			temp = atoi( token );
+			push( &head, temp );
+			++stacksize;
+		} else {
+			/* We have an operand (hopefully) */
+			if( strlen( token ) != 1 ) {
+				fprintf( stderr, "Error: Token '%s' too large.\n", token );
+				exit( 1 );
+			}
+
+			op = token[0];
+
+			if( stacksize < need( op ) ) {
+				fputs( "Too few arguments on stack.\n", stderr );
+				exit( 1 );
+			}
+
+			push( &head, eval( op, &head ) );
+			stacksize -= need( op ) - 1;
+		}
+	}
+
+	if( stacksize != 1 ) {
+		fputs( "Too many arguments on stack.\n", stderr );
+		exit( 1 );
+	}
+
+	printf( "Result: %i\n", head->data );
+
+	return 0;
 }
