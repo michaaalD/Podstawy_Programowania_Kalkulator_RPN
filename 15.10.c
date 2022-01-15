@@ -50,7 +50,7 @@ void empty(el_stosu **head)
     {
         *head = (*head)->next;
     }
-  
+    head = NULL;
     printf("Stos Pusty\n");
 }
 
@@ -74,17 +74,17 @@ int print_FULL(el_stosu ** head){
 
     el_stosu *display_all;
     display_all = *head;
+    
     if(display_all!= NULL)
     {
-        printf("Stos: ");
+        printf("Elementy Stosu:\n");
         do
         {   
             int x = display_all->wartosc;
-            printf("%d ",x);
+            printf("%d\n",x);
             display_all = display_all->next;
         }
         while (display_all!= NULL);
-        printf("\n");
         return 0;
     }
     else
@@ -108,109 +108,107 @@ int main()
   int arg;                    //zmienna aktualnego argumentu
   int n=0;                    //liczba argumentow
 
+  printf("Kalkulator RPN\n");
+  printf("Instrukcja podawania argumentów: \n");
+  printf("1 liczba\n");
+  printf("2 liczba\n");
+  printf("znak operacji\n +(jako -+), -(jako --), /, * \n p(wypisz top stosu) || c(wyczysc stos) || f(wywietl caly stos) || r(odwrocenie stosu) || q(koniec programu)\n");
 
   while(oper != 'q'){
+    
     if(scanf("%d",&arg)){
-      printf("Wczytano liczbe: %d\n",arg);
-      push(&stos,arg);
-      n++;
-    }
+        printf("Wczytano liczbe: %d\n",arg);
+        push(&stos,arg);
+        n++;
+      }
     else{
-      oper = getc(stdin);
-      printf("Wczytano znak: >%c<\n",oper);
-    }
+        oper = getc(stdin);
+        printf("Wczytano znak: >%c<\n",oper);
+      }
 
   
-    if(n>0 && oper != ' '){
+    if(n>1 && oper != ' '){
     
       switch(oper){
         case '+':
-        {
-          float a= pop(&stos);
-          float b = pop(&stos);
-          float c = b+a;
-          printf("Wynik: %.2f\n",c);
-          push(&stos,c);
-          n--;
-          oper=' ';
-         break;
-        }
-      case '-':
-        {
-          float a= pop(&stos);
-          float b = pop(&stos);
-          float c = b-a;
-          printf("Wynik: %.2f\n",c);
-          push(&stos,c);
-          n--;
-          oper=' ';
+          {
+            float a= pop(&stos);
+            float b = pop(&stos);
+            float c = b+a;
+            printf("Wynik: %.2f\n",c);
+            push(&stos,c);
+            n--;
+            oper=' ';
           break;
           }
-      case '/':
-        {
-          float a= pop(&stos);
-          float b = pop(&stos);
-          float c = (float)b/(float)a;
-          printf("Wynik: %.2f\n",c);
-          push(&stos,c);
-          n--;
-          oper=' ';
-          break;
-        }
-      case '*':
-        {
-          float a= pop(&stos);
-          float b = pop(&stos);
-          float c = (float)b*(float)a;
-          printf("Wynik: %.2f\n", c);
-          push(&stos,c);
-          n--;
-          oper=' ';
-          break;
-        }
-      case 'c':
-        {
-          empty(&stos);
-          free(stos);
-          stos=NULL;
-          n=0;
-          oper=' ';
-          break;
-        }
-      case 'p':
-        {
-          print(&stos);
-          oper=' ';
-          break;
-        }
-      case 'f':
-        {
-          print_FULL(&stos);
-          oper=' ';
-          break;
-        }
+        case '-':
+          { 
+            float a= pop(&stos);
+            float b = pop(&stos);
+            float c = b-a;
+            printf("Wynik: %.2f\n",c);
+            push(&stos,c);
+            n--;
+            oper=' ';
+            break;
+            }
+        case '/':
+          {
+            float a= pop(&stos);
+            float b = pop(&stos);
+            float c = (float)b/(float)a;
+            printf("Wynik: %.2f\n",c);
+            push(&stos,c);
+            n--;
+            oper=' ';
+            break;
+          }
+        case '*':
+          {
+            float a= pop(&stos);
+            float b = pop(&stos);
+            float c = (float)b*(float)a;
+            printf("Wynik: %.2f\n", c);
+            push(&stos,c);
+            n--;
+            oper=' ';
+            break;
+          }
+        case 'c':
+          {
+            empty(&stos);
+            free(stos);
+            stos=NULL;
+            n=0;
+            oper=' ';
+            break;
+          }
+        case 'p':
+          {
+            print(&stos);
+            oper=' ';
+            break;
+          }
+        case 'f':
+          {
+            print_FULL(&stos);
+            oper=' ';
+            break;
+          }
         default:
-        {
-          if(oper!='q')
-          printf("Invalid\n");
-          n--;
-          oper=' ';
-          break;
+          {
+            if(oper!='q')
+            printf("Nieprawidłowy znak\n");
+            n--;
+            oper=' ';
+            break;
+          }
         }
-    
       }
-      }
-    else{
+    else if(n < 2){
       printf("Wymagane 2 argumenty liczbowe\n");
     }
     
-  
-  }
-  
-  
-
-    
-
 }
   printf("Koniec Programu\n");
   
@@ -218,3 +216,6 @@ int main()
   
   return 0;
 }
+
+
+//oper = getc(stdin);
