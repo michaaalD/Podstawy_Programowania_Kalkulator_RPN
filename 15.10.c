@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+ 
 
-#define BRAK_ZNAKU 0
- 
- 
 typedef struct  el_stosu{
     int wartosc;
     struct el_stosu* next;
@@ -96,9 +94,28 @@ int print_FULL(el_stosu ** head){
  // new_element->;
 }
 
-void init(el_stosu ** head){
-  el_stosu* stos = NULL;
+void init(el_stosu ** head, char *nazwa_stosu){
+  el_stosu *nazwa_stosu = NULL;
 }
+/*
+void copy_top(el_stosu ** head){
+   
+  if(*head != NULL){
+      el_stosu *display_top;
+      display_top = *head;
+      int *temp= malloc(sizeof(int));
+      temp = display_top->wartosc;
+      printf("Szczyt stosu: %d\n",x);
+      return 0;
+    
+    }
+    else{
+      printf("Stos pusty\n");
+      return 1;
+    }
+  }
+*/
+
 
 int main()
 { 
@@ -107,12 +124,18 @@ int main()
   char oper =' ';             //zmienna operatora
   int arg;                    //zmienna aktualnego argumentu
   int n=0;                    //liczba argumentow
-
+  
+  printf("-------------------------------------------------------------------------------\n");
   printf("Kalkulator RPN\n");
+  printf("-------------------------------------------------------------------------------\n");
   printf("Instrukcja podawania argumentów: \n");
+  printf("-------------------------------------------------------------------------------\n");
   printf("1 liczba\n");
   printf("2 liczba\n");
-  printf("znak operacji\n +(jako -+), -(jako --), /, * \n p(wypisz top stosu) || c(wyczysc stos) || f(wywietl caly stos) || r(odwrocenie stosu) || q(koniec programu)\n");
+  printf("znak operacji:\n");
+  printf("+(jako -+), -(jako --), /, * ,\n");
+  printf(" t(print top), p(pop), c(wyczysc stos), f(print stos), r(odwroc stos), q(koniec)\n");
+  printf("-------------------------------------------------------------------------------\n");
 
   while(oper != 'q'){
     
@@ -183,7 +206,7 @@ int main()
             oper=' ';
             break;
           }
-        case 'p':
+        case 't':
           {
             print(&stos);
             oper=' ';
@@ -195,6 +218,34 @@ int main()
             oper=' ';
             break;
           }
+        case 'p':
+          {
+            pop(&stos);
+            oper = ' ';
+            break;
+          }
+        case 'r':
+        {
+          el_stosu* stos_temp1 = NULL; 
+          el_stosu* stos_temp2 = NULL;
+          
+          push(&stos_temp1,pop(&stos));
+          push(&stos_temp1,pop(&stos));
+          free(stos);
+
+          push(&stos_temp2,pop(&stos_temp1));
+          push(&stos_temp2,pop(&stos_temp1));
+          free(stos_temp1);
+
+          push(&stos,pop(&stos_temp2));
+          push(&stos,pop(&stos_temp2));
+          free(stos_temp2);
+
+
+          printf("Odwrocono stos\n");
+          oper=' ';
+          break;
+        }
         default:
           {
             if(oper!='q')
