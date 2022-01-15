@@ -53,37 +53,44 @@ void empty(el_stosu **head)
     printf("Stos Pusty\n");
 }
 
-int print_FULL(el_stosu **head){
+int print(el_stosu **head){
   if(*head != NULL){
-    int wartosc;
-   el_stosu* temp_element = (el_stosu*)malloc(sizeof(el_stosu)); //zaalokowanie pamieci dla stosu temp
-   temp_element->wartosc = wartosc;
-   temp_element->next = *head;
-   
-   el_stosu* stos_temp = NULL;
-
-   push(&stos_temp,pop(&stos));
+    el_stosu *display_top;
+    display_top = *head;
+    int x=display_top->wartosc;
+    printf("Szczyt stosu: %d\n",x);
+    return 0;
    
   }
   else{
     printf("Stos pusty\n");
     return 1;
   }
-  
-}
+  }
 
-int print(el_stosu ** head){
-  if(*head != NULL){
-    int wartosc;
-    el_stosu *akt_head = *head;
-    wartosc = akt_head->wartosc;
-    printf("Sczyt stosu %d\n",wartosc);
-    return wartosc;
-  }
-  else{
-    printf("Stos pusty\n");
-    return 1;
-  }
+
+int print_FULL(el_stosu ** head){
+
+    el_stosu *display_all;
+    display_all = *head;
+    if(display_all!= NULL)
+    {
+        printf("Stos: ");
+        do
+        {   
+            int x = display_all->wartosc;
+            printf("%d ",x);
+            display_all = display_all->next;
+        }
+        while (display_all!= NULL);
+        printf("\n");
+    }
+    else
+    {
+        printf("Stos pusty\n");
+    }
+
+ // new_element->;
 }
 
 int main()
@@ -114,7 +121,7 @@ int main()
         float c = b+a;
         printf("Wynik: %.2f\n",c);
         push(&stos,c);
-        break;
+        n--;
         break;
       }
       case '-':
@@ -124,6 +131,7 @@ int main()
         float c = b-a;
         printf("Wynik: %.2f\n",c);
         push(&stos,c);
+        n--;
         break;
         }
       case '/':
@@ -133,6 +141,7 @@ int main()
         float c = (float)b/(float)a;
         printf("Wynik: %.2f\n",c);
         push(&stos,c);
+        n--;
         break;
       }
       case '*':
@@ -142,11 +151,13 @@ int main()
         float c = (float)b*(float)a;
         printf("Wynik: %.2f\n", c);
         push(&stos,c);
+        n--;
         break;
       }
       case 'c':
       {
         empty(&stos);
+        n=0;
         break;
       }
       case 'p':
@@ -163,10 +174,10 @@ int main()
         {
           if(oper!='q')
           printf("Invalid\n");
+          n--;
           break;
         }
-      n--;
-      oper=' ';
+        oper=' ';
     }
   }
 
@@ -180,5 +191,3 @@ int main()
   return 0;
 }
 
-
-//oper = getc(st
