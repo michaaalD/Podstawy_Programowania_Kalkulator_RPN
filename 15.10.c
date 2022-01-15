@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <math.h>
  
 
 typedef struct  el_stosu{
@@ -49,6 +51,7 @@ void empty(el_stosu **head)
         *head = (*head)->next;
     }
     head = NULL;
+    
     printf("Stos Pusty\n");
 }
 
@@ -58,7 +61,7 @@ int print(el_stosu **head){
     display_top = *head;
     int x=display_top->wartosc;
     printf("Szczyt stosu: %d\n",x);
-    return 0;
+    return x;
    
   }
   else{
@@ -90,13 +93,9 @@ int print_FULL(el_stosu ** head){
         printf("Stos pusty\n");
         return 1;
     }
-
- // new_element->;
 }
 
-void init(el_stosu ** head, char *nazwa_stosu){
-  el_stosu *nazwa_stosu = NULL;
-}
+
 /*
 void copy_top(el_stosu ** head){
    
@@ -119,10 +118,10 @@ void copy_top(el_stosu ** head){
 
 int main()
 { 
-  el_stosu* stos = NULL;
+  el_stosu* stos = NULL;      //zainicjowanie stosu
 
   char oper =' ';             //zmienna operatora
-  int arg;                    //zmienna aktualnego argumentu
+  float arg;                  //zmienna aktualnego argumentu
   int n=0;                    //liczba argumentow
   
   printf("-------------------------------------------------------------------------------\n");
@@ -133,19 +132,20 @@ int main()
   printf("1 liczba\n");
   printf("2 liczba\n");
   printf("znak operacji:\n");
-  printf("+(jako -+), -(jako --), /, * ,\n");
-  printf(" t(print top), p(pop), c(wyczysc stos), f(print stos), r(odwroc stos), q(koniec)\n");
+  printf("+(jako '-+'), -(jako '--'), '/', '*', '%'(modulo), '^'(potegowanie),
+  \n");
+  printf(" t(print top), p(pop), c(wyczysc stos), f(print stos), r(odwroc stos), d(duplikat topu), q(koniec)\n");
   printf("-------------------------------------------------------------------------------\n");
 
   while(oper != 'q'){
     
-    if(scanf("%d",&arg)){
-        printf("Wczytano liczbe: %d\n",arg);
-        push(&stos,arg);
-        n++;
+    if(scanf("%f",&arg)){                     //pobranie argumentow liczbowych
+        printf("Wczytano liczbe: %.2f\n",arg);
+        push(&stos,arg);                      //umieszczenie na stosie
+        n++;                                  //zwiekszenie licznika ilosci argumentow
       }
-    else{
-        oper = getc(stdin);
+    else{ 
+        oper = getc(stdin);                   //pobranie operatora
         printf("Wczytano znak: >%c<\n",oper);
       }
 
@@ -157,11 +157,11 @@ int main()
           {
             float a= pop(&stos);
             float b = pop(&stos);
-            float c = b+a;
+            float c = b+a;                 //pomocnicza c do operacji arytmetycznych
             printf("Wynik: %.2f\n",c);
             push(&stos,c);
-            n--;
-            oper=' ';
+            n--;                           //po kazdej operacji arytmetycznej licznik elementow -1
+            oper=' ';                      //po kazdej operacji wyzerowanie operatora
           break;
           }
         case '-':
@@ -179,7 +179,7 @@ int main()
           {
             float a= pop(&stos);
             float b = pop(&stos);
-            float c = (float)b/(float)a;
+            float c = b/a;
             printf("Wynik: %.2f\n",c);
             push(&stos,c);
             n--;
@@ -190,25 +190,47 @@ int main()
           {
             float a= pop(&stos);
             float b = pop(&stos);
-            float c = (float)b*(float)a;
+            float c = b*a;
             printf("Wynik: %.2f\n", c);
             push(&stos,c);
             n--;
             oper=' ';
             break;
           }
+        case '%':
+          {
+            float a= pop(&stos);
+            float b = pop(&stos);
+            int c = (int)b % (int)a;            //modulo musi miec liczby stalopozycyjne, wiec zmieniam typ zmiennej z float na int, liczby beda mialy anulowana czesc po przecinku, jezeli ja maja, a nastepnie zostanie zwrocona reszta z dzielenia tych liczb
+            printf("Wynik: %d\n", c);
+            push(&stos,c);
+            n--;
+            oper=' ';
+            break;
+          }
+        case '^':
+        {
+            float a= pop(&stos);
+            float b = pop(&stos);
+            float c = pow(b,a);
+            printf("Wynik: %.2f\n", c);
+            push(&stos,c);
+            n--;
+            oper=' ';
+            break;
+        }
         case 'c':
           {
-            empty(&stos);
-            free(stos);
-            stos=NULL;
-            n=0;
+            empty(&stos);                       
+            free(stos);                         //zwolnienie pamieci dla stosu
+            stos=NULL;                          //przywrocenie aby stos znow wskazywal na "nic"
+            n=0;                                //n=0 bo zdjelismy wszystie argumenty
             oper=' ';
             break;
           }
         case 't':
           {
-            print(&stos);
+            print(&stos);                     
             oper=' ';
             break;
           }
@@ -226,20 +248,20 @@ int main()
           }
         case 'r':
         {
-          el_stosu* stos_temp1 = NULL; 
+          el_stosu* stos_temp1 = NULL;              //pomocnicze stosow do zmaiany kolejnosci elementow
           el_stosu* stos_temp2 = NULL;
           
+          push(&stos_temp1,pop(&stos));             //push elementow ze stosu glownego na stos temp1 
           push(&stos_temp1,pop(&stos));
-          push(&stos_temp1,pop(&stos));
-          free(stos);
+          free(stos);                               //zwolnienie pamieci stosu glownego
 
+          push(&stos_temp2,pop(&stos_temp1));       //push ze stosu temp1 na stos temp2
           push(&stos_temp2,pop(&stos_temp1));
-          push(&stos_temp2,pop(&stos_temp1));
-          free(stos_temp1);
+          free(stos_temp1);                         //zwolnienie pamieci stosu temp1
 
+          push(&stos,pop(&stos_temp2));             //push elementow ze stosu temp2 na stos glowny
           push(&stos,pop(&stos_temp2));
-          push(&stos,pop(&stos_temp2));
-          free(stos_temp2);
+          free(stos_temp2);                         ////zwolnienie pamieci stosu temp2
 
 
           printf("Odwrocono stos\n");
@@ -257,7 +279,7 @@ int main()
         }
       }
     else if(n < 2){
-      printf("Wymagane 2 argumenty liczbowe\n");
+      printf("Wymagane 2 argumenty liczbowe\n");              //sprawdzenie czy sa 2 argumenty liczbowe
     }
     
 }
@@ -269,4 +291,3 @@ int main()
 }
 
 
-//oper = getc(stdin);
