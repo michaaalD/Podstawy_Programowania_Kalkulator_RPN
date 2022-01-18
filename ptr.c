@@ -128,13 +128,13 @@ int main()
   printf("-------------------------------------------------------------------------------\n");
   printf("Kalkulator RPN\n");
   printf("-------------------------------------------------------------------------------\n");
+  printf(" t(print top), p(pop), c(wyczysc stos), f(print stos), r(odwroc stos), d(duplikat topu), q(koniec)\n");
+  printf("-------------------------------------------------------------------------------\n");
   printf("Instrukcja podawania argumentów: \n");
   printf("-------------------------------------------------------------------------------\n");
-  printf("1 liczba\n");
-  printf("2 liczba\n");
+  printf("1 liczba\n2 liczba\n");
   printf("znak operacji:\n");
-  printf("  +(jako '-+'), -(jako '-'), '/', '*', '^'(potegowanie),\n");
-  printf(" t(print top), p(pop), c(wyczysc stos), f(print stos), r(odwroc stos), d(duplikat topu), q(koniec)\n");
+  printf("'+', '-', '/', '*', '^', '%', 't', 'p', 'c','f', 'r', 'd', 'q'\n");
   printf("-------------------------------------------------------------------------------\n");
 
   while(oper != 'q'){
@@ -261,7 +261,7 @@ int main()
           {
             empty(&stos);                       
             free(stos);                         //zwolnienie pamieci dla stosu
-            stos=NULL;                          //przywrocenie aby stos znow wskazywal na "nic"
+            stos=NULL;                          //przywrocenie aby stos znow skazywal  na "nic"
             printf("ERROR(c) - Stos pusty\n");
             n=0;
             oper=' ';                                
