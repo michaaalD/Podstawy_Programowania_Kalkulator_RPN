@@ -162,7 +162,7 @@ int main()
                                       //po kazdej operacji wyzerowanie operatora
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(+)Stos pusty\n");
             }
           break;
           }
@@ -175,10 +175,11 @@ int main()
                 printf("Wynik: %.2f\n",c);
                 push(&stos,c);
                 n--;
+                oper=' ';
                  ;
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(-) Stos pusty\n");
             }
             break;
             }
@@ -187,15 +188,20 @@ int main()
             if(n>1){
                 float a= pop(&stos);
                 float b = pop(&stos);
-                float c = b/a;
-                printf("Wynik: %.2f\n",c);
-                push(&stos,c);
-                n--;
-                 
-            }
+                if(a!=0){
+                  float c = b/a;
+                  printf("Wynik: %.2f\n",c);
+                  push(&stos,c);
+                  n--;
+                }
+                else{
+                  printf("ERROR - Mianownik mniejszy or zera\n");
+                }
+              }
             else{
-                printf("Stos pusty\n");
-            }
+                printf("ERROR(/)Stos pusty\n");
+              }
+            oper=' ';
             break;
           }
         case '*':
@@ -206,28 +212,33 @@ int main()
                 float c = b*a;
                 printf("Wynik: %.2f\n", c);
                 push(&stos,c);
-                n--;
-                
+                n--;  
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(*)Stos pusty\n");
             }
+            oper=' ';
             break;
           }
         case '%':
           {
             if(n>1){
-                float a= pop(&stos);
+                float a= pop(&stos);         
                 float b = pop(&stos);
-                int c = (int)b % (int)a;            //modulo musi miec liczby stalopozycyjne, wiec zmieniam typ zmiennej z float na int, liczby beda mialy anulowana czesc po przecinku, jezeli ja maja, a nastepnie zostanie zwrocona reszta z dzielenia tych liczb
-                printf("Wynik: %d\n", c);
-                push(&stos,c);
-                n--;
-                
+                if(a!=0){
+                  int c = (int)b % (int)a;            //modulo musi miec liczby stalopozycyjne, wiec zmieniam typ zmiennej z float na int, liczby beda mialy anulowana czesc po przecinku, jezeli ja maja, a nastepnie zostanie zwrocona reszta z dzielenia tych liczb
+                  printf("Wynik: %d\n", c);
+                  push(&stos,c);
+                  n--;
+                }
+                else{
+                  printf("Nie mozna obliczyc reszt z dzielenia przez 0\n");
+                }
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(%)Stos pusty\n");
             }
+            oper=' ';
             break;
           }
         case '^':
@@ -238,12 +249,12 @@ int main()
                 float c = pow(b,a);
                 printf("Wynik: %.2f\n", c);
                 push(&stos,c);
-                n--;
-                
+                n--;   
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(^)Stos pusty\n");
             }
+            oper=' ';
             break;
         }
         case 'c':
@@ -251,20 +262,21 @@ int main()
             empty(&stos);                       
             free(stos);                         //zwolnienie pamieci dla stosu
             stos=NULL;                          //przywrocenie aby stos znow wskazywal na "nic"
-            printf("Stos pusty\n");
-            n=0;                                //n=0 bo zdjelismy wszystie argumenty
-            
+            printf("ERROR(c) - Stos pusty\n");
+            n=0;
+            oper=' ';                                
             break;
           }
         case 't':
           {
             if(n>0){
-                print(&stos);                     
+                print(&stos);                    
             
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(t) - Stos pusty\n");
             }
+            oper=' ';
             break;
           }
         case 'f':
@@ -274,8 +286,9 @@ int main()
                 
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(f) - Stos pusty\n");
             }
+            oper=' ';
             break;
           }
         case 'p':
@@ -285,8 +298,9 @@ int main()
                 
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(p) - Stos pusty\n");
             }
+            oper=' ';
             break;
           }
         case 'r':
@@ -311,19 +325,19 @@ int main()
             
             }
             else{
-                printf("Stos pusty\n");
+                printf("ERROR(r) - Stos pusty\n");
             }
+          oper=' ';
           break;
         }
         default:
           {
-            if(oper!='q' && oper != n)
-            printf("Nieprawidłowy znak\n");
-            n--;
-            
+            if(oper != ' ' && oper!='q' && sizeof(oper)==sizeof(char))
+            printf("ERROR - Nieprawidłowy znak\n");
+            oper=' ';
             break;
           }
-          oper=' ';
+          
         }
       
 }
