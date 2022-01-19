@@ -6,37 +6,37 @@
 #include <math.h>
  
 
-typedef struct  el_stosu{
-    int wartosc;
-    struct el_stosu* next;
-} el_stosu;
+typedef struct  el_stosu_t{               //zadeklarowanie struktury
+    int wartosc;                          //zmianna int wartosc 
+    struct el_stosu_t* next;              // wskaznik na nastepny element struktury
+} el_stosu_t;
  
-el_stosu new_el_stosu(int wartosc){
-    el_stosu el = {wartosc, NULL};
+el_stosu_t new_el_stosu_t(int wartosc){
+    el_stosu_t el = {wartosc, NULL};        //zainicjowanie stosu
     return el;
 }
  
-void push(el_stosu **head, int wartosc){
-    el_stosu* new_element = (el_stosu*)malloc(sizeof(el_stosu)); //zaalokowanie pamieci dla stosu 
+void push(el_stosu_t **head, int wartosc){
+    el_stosu_t* new_element = (el_stosu_t*)malloc(sizeof(el_stosu_t)); //zaalokowanie pamieci dla stosu 
  
-    new_element->wartosc = wartosc;
-    new_element->next = *head;
+    new_element->wartosc = wartosc;   //przypisanie wartosci
+    new_element->next = *head;        //przypisanie head stosu jako nastepny element na stosie
  
     *head = new_element;
 }
  
 
-int pop(el_stosu **head)
+int pop(el_stosu_t **head)
 {
     if(*head != NULL){
         int wartosc;
-        el_stosu *old_head = *head; //aktualny element na szczycie stosu, jako old_head
+        el_stosu_t *old_head = *head; //aktualny element na szczycie stosu, jako old_head
  
-        *head = (*head)->next;
-        wartosc = old_head->wartosc;
+        *head = (*head)->next;        //head jako nastepny element
+        wartosc = old_head->wartosc;  //przypisanie zmiennej wartosci wartosci starego head
  
-        free(old_head); //zwolnienie pamieci gdzie byl wskaznik na zdjety element
-        return wartosc;
+        free(old_head);               //zwolnienie pamieci gdzie byl wskaznik na zdjety element
+        return wartosc;                //zwrocenie elementu jaki zdjelismy
     }
     else{
         printf("Nie mozna zdjac elementu z pustego stosu\n");
@@ -44,43 +44,43 @@ int pop(el_stosu **head)
     }
 }
 
-void empty(el_stosu **head)
+void empty(el_stosu_t **head)
 {
     
-    while(*head != NULL)
+    while(*head != NULL)            //sprawdzamy czy glowa nie wskazuje na 'nic'
     {
-        *head = (*head)->next;
+        *head = (*head)->next;      //head zmienia sie na kazdy kolejny element stosu
     }
-    head = NULL;
+    head = NULL;                    //head wskazuje na 'nic'
     
     printf("Stos Pusty\n");
 }
 
-int print(el_stosu **head){
-  if(*head != NULL){
-    el_stosu *display_top;
-    display_top = *head;
-    int x=display_top->wartosc;
-    printf("Szczyt stosu: %d\n",x);
-    return x;
+int print(el_stosu_t **head){
+  if(*head != NULL){                  //sprawdzamy czy stos nie jest pusty
+      el_stosu_t *display_top;        //wskanik na nastepny Element
+      display_top = *head;            
+      int x=display_top->wartosc;     //przypisanie zmiennej x wartosci ze struktury
+      printf("Szczyt stosu: %d\n",x); //wypisanie tej wartosci
+      return x;                       
    
   }
   else{
-    printf("Stos pusty\n");
-    return 1;
+      printf("Stos pusty\n");
+      return 1;
+    }
   }
-  }
 
 
-int print_FULL(el_stosu ** head){
+int print_FULL(el_stosu_t ** head){
 
-    el_stosu *display_all;
-    display_all = *head;
+    el_stosu_t *display_all;    //wskaznik na kolejny element struktury
+    display_all = *head;         //wskaznik pokauje na head
     
-    if(display_all!= NULL)
+    if(display_all!= NULL)        //sprawdzamy czy wskaznik nie pokazuje na 'nic'
     {
         printf("Elementy Stosu:\n");
-        do
+        do                                  //wypisanie elementow stosu, wyswietli conajmniej jeden element stosu,
         {   
             int x = display_all->wartosc;
             printf("%d\n",x);
@@ -97,29 +97,30 @@ int print_FULL(el_stosu ** head){
 }
 
 
-/*
-void copy_top(el_stosu ** head){
+
+int copy_top(el_stosu_t ** head){
    
-  if(*head != NULL){
-      el_stosu *display_top;
-      display_top = *head;
-      int *temp= malloc(sizeof(int));
-      temp = display_top->wartosc;
-      printf("Szczyt stosu: %d\n",x);
-      return 0;
+  if(*head != NULL){                        //sprawdzamy czy wskaznik nie pokazuje na 'nic'
+    el_stosu_t *copy_top; 
+    copy_top=*head;
+     int kopia;                             
+      kopia = copy_top->wartosc;            //przypisujemy zmiennej kopia wartosc head
+      printf("Skopiowano top stosu:\n");
+      return kopia;                         //zwracamy kopie
+      
     
     }
     else{
       printf("Stos pusty\n");
-      return 1;
+      return 0;
     }
   }
-*/
+
 
 
 int main()
 { 
-  el_stosu* stos = NULL;      //zainicjowanie stosu
+  el_stosu_t* stos = NULL;      //zainicjowanie stosu
 
   char oper =' ';             //zmienna operatora
   float arg;                  //zmienna aktualnego argumentu
@@ -159,28 +160,38 @@ int main()
                 printf("Wynik: %.2f\n",c);
                 push(&stos,c);
                 n--;                           //po kazdej operacji arytmetycznej licznik elementow -1
-                                      //po kazdej operacji wyzerowanie operatora
+                                              
             }
             else{
                 printf("ERROR(+)Stos pusty\n");
             }
-          break;
+           oper = ' ';                          //po kazdej operacji wyzerowanie operatora
+           break;
           }
         case '-':
           { 
-            if(n>1){
+            if(n>1){                            //jak 2 argumenty to wykonujemy odejmowanie
                 float a= pop(&stos);
                 float b = pop(&stos);
                 float c = b-a;
                 printf("Wynik: %.2f\n",c);
                 push(&stos,c);
                 n--;
-                oper=' ';
-                 ;
+                
+                 
+            }
+            else if(n==1){                      //jak 1 argument, zmieniamy znak
+              float a = pop(&stos);
+              float c = (-a);
+              printf("Wynik: %.2f\n",c);
+              push(&stos,c);
+              n--;
+              
             }
             else{
                 printf("ERROR(-) Stos pusty\n");
             }
+            oper=' ';
             break;
             }
         case '/':
@@ -188,7 +199,7 @@ int main()
             if(n>1){
                 float a= pop(&stos);
                 float b = pop(&stos);
-                if(a!=0){
+                if(a!=0){                           //sprawdzenie czy mianownik nie jest zerem
                   float c = b/a;
                   printf("Wynik: %.2f\n",c);
                   push(&stos,c);
@@ -262,7 +273,7 @@ int main()
             empty(&stos);                       
             free(stos);                         //zwolnienie pamieci dla stosu
             stos=NULL;                          //przywrocenie aby stos znow skazywal  na "nic"
-            printf("ERROR(c) - Stos pusty\n");
+            
             n=0;
             oper=' ';                                
             break;
@@ -303,11 +314,24 @@ int main()
             oper=' ';
             break;
           }
+        case 'd':
+        {
+            if(n>0){
+                
+              push(&stos,copy_top(&stos));              //skopiowanie topu
+              if(n==1)n++;                              //kiedy jest jeden element na stosie, a chcemy go skopiowac
+            }
+            else{
+                printf("ERROR(p) - Stos pusty\n");
+            }
+            oper=' ';
+            break;
+        }
         case 'r':
         {
             if(n>1){
-            el_stosu* stos_temp1 = NULL;              //pomocnicze stosy do zmaiany kolejnosci elementow
-            el_stosu* stos_temp2 = NULL;
+            el_stosu_t* stos_temp1 = NULL;              //pomocnicze stosy do zmaiany kolejnosci elementow
+            el_stosu_t* stos_temp2 = NULL;
             
             push(&stos_temp1,pop(&stos));             //push elementow ze stosu glownego na stos temp1 
             push(&stos_temp1,pop(&stos));
@@ -330,6 +354,26 @@ int main()
           oper=' ';
           break;
         }
+        case 's':
+        {
+          if(n>0){
+                float a= pop(&stos);
+                if(a>0){                        //sprawdzamy czy liczba pierwiastkowana wieksza od zera
+                  float b = sqrt(a);
+                  printf("Wynik: %.2f\n",b);
+                  push(&stos,b);
+                }
+                else{
+                  printf("Nie mozna obliczyc pierwiastka z liczby ujemnej\n");
+                  push(&stos,a);
+                }
+            }
+            else{
+                printf("ERROR(s) - Stos pusty\n");
+            }
+            oper=' ';
+            break;
+        }
         default:
           {
             if(oper != ' ' && oper!='q' && sizeof(oper)==sizeof(char))
@@ -350,3 +394,40 @@ printf("Koniec Programu\n");
 return 0;
 }
 
+/*Sprawozdanie
+Michal Dos
+Temat: Kalkulator RPN
+Data: 19.01.2021r.
+
+TESTY:
+Testy programu zaczalem od implementacji prostych operacji arytmetycznych do switcha.
+Program poprwanie wykonwyal podstawowe arytmetyczne np. 
+1)  5 5 * = 25
+2)  6 2 / = 3
+3)  7 8 + = 15
+4)  74 65 - = 9
+
+Program podobnie jak w przypadku kalkulatora dc zmienia znak liczby po wpisaniu - np.
+1)  5 - = -5
+2) -3 - = 3
+
+Program nie pozwala na wykonanie operacji gdy jest tylko jeden argument, po wykonaniu takiej operacji, operator zostaje wyzerowany np. :
+1)  5 * = ERROR(*) Stos
+
+
+Dodatkowo dodalem do programu opcje liczenia potegi liczby, reszty z dzielenia, pierwiastkowanie. 
+
+Nastepnie zajalem sie deklaracja asercji poszczegolnych dzialan 
+1)  Program nie pozwala dzielic przez 0 np.:
+1 0 / = ERROR mianownik mniejszy od zera
+
+2)  Program nie pozwala liczyc reszty z dzeielenia przez 0:
+ 8 0 % = ERROR nie  mozna liczyc reszty z dzielenia przez 0
+
+3) Program nie pozwala liczyc pierwiastkow z liczby ujemnej:
+-5 s = Nie mozna liczyc pierwiastka z liczby ujemnej
+
+Wnioski :
+Program wydaje sie popwawnie wykonywac operacje jako kalkulator RPN.
+
+*/
